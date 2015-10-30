@@ -7,25 +7,31 @@ class PolyTreeNode
     @children = []
   end
 
-  def parent=(parent)
-    if @parent == nil #I dont have a parent
-      @parent = parent #update my current parent
-      parent.children << self if parent #add me to new parents children
+  def parent=(given_parent)
 
-    elsif parent == nil #you give me a nil parent
+    # If I have no parent and the given parent is good
+    if @parent == nil && valid_node?(given_parent)
+      @parent = given_parent
+      given_parent.children << self
+
+    # If you want to remove my parent
+    elsif given_parent == nil
       if @parent
-        @parent.children.delete(self) #remove me from old parents children
-        @parent = nil #remove my current parent
+        @parent.children.delete(self)
+        @parent = nil
       end
 
-    elsif valid_node?(parent) #you give me a new parent
-      @parent.children.delete(self) #remove me from old parents children
-      @parent = parent #update my current parent
-      parent.children << self #add me to new parents children
+    #If you want to transfer custody to stepdad
+    elsif valid_node?(given_parent)
+      @parent.children.delete(self)
+      @parent = given_parent
+      given_parent.children << self
 
-    else #you give me a bad parent
+    #If parent_given doesn't conform to expectations
+    else
       raise "You gave me a bad parent! :("
     end
+
   end
 
   def valid_node?(node)
